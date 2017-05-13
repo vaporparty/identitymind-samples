@@ -1,0 +1,146 @@
+body {
+    padding: 5px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+
+.container {
+    width: 500px;
+    clear: both;
+}
+.container input {
+    width: 100%;
+    clear: both;
+}
+
+#container {
+    width: 100%;
+    overflow:hidden;
+    display:table;
+}
+#graphContainer {
+    display:table-cell;
+    border: 1px dotted #107E92;
+    height: 85vh;
+}
+#metricsColumn {
+    border: 1px dotted #107E92;
+    display:table-cell;
+    width: 400px;
+    max-width: 400px;
+    overflow: hidden;
+}
+#metricsContainer {
+    border: 1px dotted #107E92;
+    display:block;
+    width: 400px;
+    max-width: 400px;
+    height: 85vh;
+    overflow: scroll;
+}
+#entityContainer  {
+    border: 1px dotted #107E92;
+    display:table-cell;
+    width: 400px;
+    height: 85vh;
+    overflow: scroll;
+}
+
+#header {
+    width: 100%;
+    overflow:hidden;
+    display:table;
+}
+
+form {
+    margin: 5px;
+    padding: 1em 5px;
+    border: 1px dotted #107E92;
+}
+.taggingform {
+    margin: 5px;
+    padding: 1em 5px;
+    border: 1px dotted #107E92;
+    float:left;
+}
+
+.sigma-tooltip {
+    max-width: 300px;
+    max-height: 350px;
+    background-color: rgb(249, 247, 237);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    border-radius: 6px;
+}
+.sigma-tooltip-header {
+    font-variant: small-caps;
+    font-size: 120%;
+    color: #437356;
+    border-bottom: 1px solid #aac789;
+    padding: 10px;
+}
+.sigma-tooltip-body {
+    padding: 10px;
+}
+.sigma-tooltip-body th {
+    color: #999;
+    text-align: left;
+}
+.sigma-tooltip-footer {
+    padding: 10px;
+    border-top: 1px solid #aac789;
+}
+.sigma-tooltip > .arrow {
+    border-width: 10px;
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+}
+.sigma-tooltip.top {
+    margin-top: -12px;
+}
+.sigma-tooltip.top > .arrow {
+    left: 50%;
+    bottom: -10px;
+    margin-left: -10px;
+    border-top-color: rgb(249, 247, 237);
+    border-bottom-width: 0;
+}
+.sigma-tooltip.bottom {
+    margin-top: 12px;
+}
+.sigma-tooltip.bottom > .arrow {
+    left: 50%;
+    top: -10px;
+    margin-left: -10px;
+    border-bottom-color: rgb(249, 247, 237);
+    border-top-width: 0;
+}
+.sigma-tooltip.left {
+    margin-left: -12px;
+}
+.sigma-tooltip.left > .arrow {
+    top: 50%;
+    right: -10px;
+    margin-top: -10px;
+    border-left-color: rgb(249, 247, 237);
+    border-right-width: 0;
+}
+.sigma-tooltip.right {
+    margin-left: 12px;
+}
+.sigma-tooltip.right > .arrow {
+    top: 50%;
+    left: -10px;
+    margin-top: -10px;
+    border-right-color: rgb(249, 247, 237);
+    border-left-width: 0;
+}
+
+

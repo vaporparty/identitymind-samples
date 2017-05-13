@@ -1,0 +1,266 @@
+<!--
+  ~ Copyright (c) 2017. IDM Global Inc.  All Rights Reserved.
+  -->
+
+<html>
+<head>
+    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+<div id="header">
+    <span id="form" style="border: 1px dotted #107E92;display:table-cell;width: 400px;">
+        <form action="" name="myform">
+            uai imid : <label for="id"></label><input type="text" name="id" id="id"><br>
+            <input type="button" value="Submit" id="submit" onclick="loadData()"/>
+        </form>
+    </span>
+    <span id="form2" style="border: 1px dotted #107E92;display:table-cell;width: 400px;">
+        <form action="" name="myform2">
+            max entities    : <input type="text" id="maxEntities" value="1000"/><br>
+            depth           : <input type="text" id="depth" value="5"/><br>
+            traverse tagged : <input type="text" id="traverse" value="false"/><br>
+            include uai     : <input type="text" id="includeUAI" value="true"/><br>
+            include pi      : <input type="text" id="includePI" value="false"/><br>
+        </form>
+    </span>
+    <span id="form3" style="border: 1px dotted #107E92;display:table-cell;width: 400px;">
+        <form action="" name="myform2">
+            search for   : <input type="text" id="search"/><br>
+            <input type="button" value="Search" id="searchButton" onclick='searchGraph(document.getElementById("search").value.trim(), true)'/>
+            <input type="button" value="Reset" id="resetButton" onclick='resetGraph()'/>
+        </form>
+    </span>
+</div>
+
+
+<div id="container">
+    <div id="metricsColumn">
+        <div id="metricsContainer" > </div>
+    </div>
+    <div id="graphContainer"> </div>
+    <span id="entityContainer" > </span>
+</div>
+<div id="linkContainer"> </div>
+
+<script src="js/sigma.require.js"></script>
+<script src="js/sigma.renderers.customEdgeShapes.min.js"></script>
+<script src="js/sigma.renderers.customShapes.min.js"></script>
+<script src="js/sigma.renderers.edgeDots.min.js"></script>
+<script src="js/sigma.renderers.edgeLabels.min.js"></script>
+<script src="js/sigma.renderers.parallelEdges.min.js"></script>
+<script src="js/sigma.renderers.snapshot.min.js"></script>
+<script src="js/sigma.layout.forceAtlas2.min.js"></script>
+<script src="js/sigma.layout.noverlap.min.js"></script>
+<script src="js/sigma.parsers.gexf.min.js"></script>
+<script src="js/sigma.parsers.json.min.js"></script>
+<script src="js/sigma.pathfinding.astar.min.js"></script>
+<script src="js/sigma.plugins.animate.min.js"></script>
+<script src="js/sigma.plugins.dragNodes.min.js"></script>
+<script src="js/sigma.plugins.filter.min.js"></script>
+<script src="js/sigma.plugins.neighborhoods.min.js"></script>
+<script src="js/sigma.plugins.relativeSize.min.js"></script>
+<script src="js/sigma.exporters.svg.min.js"></script>
+<script src="js/sigma.statistics.HITS.min.js"></script>
+<script src="js/sigma.misc.bindDOMEvents.js"></script>
+<script src="js/sigma.misc.bindEvents.js"></script>
+
+
+<script src="js/sigma.plugins.tooltips.js"></script>
+<script src="js/mustache-0.8.1.min.js"></script>
+<script src="js/entitygraph.js"></script>
+
+
+
+<script>
+
+  // whether to enable global admin features.  The API will authenticate before performing any actions!
+  var globalAdminLoggedIn = false;
+  var gg;          // once the (sigma) graph is loaded this will be a reference to it
+  var highlightColor = 'lightgrey';
+  var highlightStrokeWidth = 4;
+
+
+  function loadData() {
+    loadTransfersGraph(document.getElementById("id").value.trim(),
+      'graphContainer', 'metricsContainer', 'entityContainer');
+  }
+
+  /**
+   * Load the sigma.js entity graph into the elements
+   * @param id
+   * @param graphElementId    target for the sigma graph
+   * @param metricsElementId  target for the graph metrics
+   */
+  function loadTransfersGraph(id, graphElementId, metricsElementId, entityElementId) {
+
+    document.getElementById(graphElementId).innerHTML = "";
+
+    console.log("Load user", id);
+
+
+    var max = document.getElementById("maxEntities").value.trim();
+    var depth = document.getElementById("depth").value.trim();
+    var traverse = document.getElementById("traverse").value.trim();
+    var includeUAI = document.getElementById("includeUAI").value.trim();
+    var includePI = document.getElementById("includePI").value.trim();
+
+    var url = getBaseURL() + "entitygraph/v2/transfers/" + id
+      + "?maxEntities=" + max
+      + "&depth=" + depth
+      + "&traverse=" + traverse
+      + "&includeu=" + includeUAI
+      + "&includep=" + includePI;
+    loadEntityGraphJSON(url,
+      {
+        container: graphElementId,
+        settings: {
+          defaultNodeColor: 'gray',
+          defaultEdgeColor: '#E0E0E0',
+          edgeColor: 'default',
+          minNodeSize: 1,
+          minArrowSize: 5,
+          maxNodeSize: 20,
+          labelThreshold: 16,
+          enableEdgeHovering: true,
+        },
+        renderer: {
+          container: document.getElementById(graphElementId), type: 'canvas'
+        }
+      }, function (g, graph) {
+        gg = g;
+        document.getElementById(metricsElementId).innerHTML = "";
+
+        document.getElementById(metricsElementId).appendChild(document.createElement('pre')).innerHTML =
+          '<div class="metrics-table">' +
+          '    <table>' +
+          '      <tr><th align="left">Graph Root</th> <td>' + id + '</td></tr>' +
+//                           '      <tr><th align="left">Graph Score</th> <td>' + graph.metrics.score + '</td></tr>' +
+//                           '      <tr><th align="left">Total Entities</th> <td>' + graph.metrics.entities + '</td></tr>' +
+//                           '      <tr><th align="left">Total Bad Entities</th> <td>' + (graph.metrics.entitiesByReputation.BAD === undefined ? 0 : graph.metrics.entitiesByReputation.BAD) + '</td></tr>' +
+//                           '      <tr><th align="left">Total CB/Fraud Rfnd</th> <td>' + graph.metrics.chargeBackAndFraudRefundCount + '</td></tr>' +
+//                           '      <tr><th align="left">Client Count</th> <td>' + graph.metrics.uniqueClientCount + '</td></tr>' +
+//                           '      <tr><th align="left">Tags</th> <td>' + Object.keys(graph.metrics.entityTags) + '</td></tr>' +
+          '    </table>' +
+          '<\div><br>';
+
+//                    document.getElementById(metricsElementId).appendChild(document.createElement('pre')).innerHTML = JSON.stringify(graph.metrics, null, 2);
+
+        searchGraph(id, false);
+
+
+        gg.startForceAtlas2();
+        /*
+        var maxLayoutTimeMS = 300;
+        if (graph.metrics.entities > 100)
+          maxLayoutTimeMS = 1000;
+        if (graph.metrics.entities > 1000)
+          maxLayoutTimeMS = 5000;
+          */
+        // don't burn up the browsers CPU forever
+        setTimeout(function () { gg.stopForceAtlas2(); }, 1000);
+
+        // initialize drag & drop plugin
+        sigma.plugins.dragNodes(gg, gg.renderers[0]);
+
+
+        gg.bind('clickNode', function(e) {
+          loadEntity(e.data.node.id, e.data.node.label, entityElementId)
+        });
+
+        gg.bind('overNode', function(nn) {
+          hideNonNeighbours(nn,gg);
+        });
+
+        gg.bind('outNode', function(nn) {
+          allUnhidden(nn,gg);
+        });
+
+
+        // https://github.com/Linkurious/linkurious.js/blob/develop/examples/plugin-tooltips.html
+        var tooltipInstance = sigma.plugins.tooltips(
+          gg,
+          gg.renderers[0],
+          {
+            node: [{
+              show: 'clickNode',
+              hide: 'outNode',
+              delay: 1000,
+              position: 'left',
+              template:
+              '<div class="arrow"></div>' +
+              ' <div class="sigma-tooltip-header">{{label}}</div>' +
+              '  <div class="sigma-tooltip-body">' +
+              '    <table>' +
+              '      <tr><th>Type</th> <td>{{typeString}}</td></tr>' +
+              '      <tr><th>Trust</th> <td>{{trust}}</td></tr>' +
+              '      <tr><th>Seen Count</th> <td>{{seenCount}}</td></tr>' +
+              '      <tr><th>Merchants</th> <td>{{merchantCount}}</td></tr>' +
+              '      <tr><th>Seen by me</th> <td>{{seenAtMerchant}}</td></tr>' +
+              '      <tr><th>First Seen</th> <td>{{firstSeen}}</td></tr>' +
+              '      <tr><th>Recent Seen</th> <td>{{mostRecentlySeen}}</td></tr>' +
+              '      <tr><th>Entity Tags</th> <td>{{tags}}</td></tr>' +
+              '    </table>' +
+              '  </div>' +
+              '  <div class="sigma-tooltip-footer">Number of connections: {{degree}}</div>',
+              renderer: function(node, template) {
+                // The function context is s.graph
+                node.degree = this.degree(node.id);
+                // Returns an HTML string:
+                return Mustache.render(template, node);
+                // Returns a DOM Element:
+                //var el = document.createElement('div');
+                //return el.innerHTML = Mustache.render(template, node);
+              }
+
+            }],
+            edge: [{
+              show: 'overEdge',
+              hide: 'outEdge',
+              delay: 300,
+              template:
+              '<div class="arrow"></div>' +
+              ' <div class="sigma-tooltip-header">{{relationships}}</div>' +
+              '  <div class="sigma-tooltip-body">' +
+              '    <table>' +
+              '      <tr><th>First Seen</th> <td>{{firstSeen}}</td></tr>' +
+              '      <tr><th>Recent Seen</th> <td>{{mostRecentlySeen}}</td></tr>' +
+              '    </table>' +
+              '  </div>',
+              renderer: function(edge, template) {
+                // The function context is s.graph
+                edge.degree = this.degree(edge.id);
+                // Returns an HTML string:
+                return Mustache.render(template, edge);
+                // Returns a DOM Element:
+                //var el = document.createElement('div');
+                //return el.innerHTML = Mustache.render(template, node);
+              }                                }]
+          }
+        );
+
+      });
+
+      // if it looks like an imid, load the entity
+        if (id.substring(1,2) === ':')
+            loadEntity(id, '', 'entityContainer');
+
+    {
+      // link for JSON
+      //
+      document.getElementById('linkContainer').innerHTML = "";
+      var aLink = document.createElement('a');
+      document.getElementById('linkContainer').appendChild(aLink);
+      var linkText = document.createTextNode("Adjacency List Download");
+      aLink.appendChild(linkText);
+      aLink.title = "Adjacency List Download";
+      aLink.href = url;
+    }
+  }
+
+
+
+
+
+</script>
+</body>
+</html>
