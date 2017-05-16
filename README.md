@@ -1,6 +1,8 @@
-npm install
-npm start
+A wrapper around the IdentityMind Identity Link Grap APIs, using http://sigmajs.org for visualization<p>
 
-Go to localhost:3000 in your browsert
-Configure access to the IdentityMind server via the configuration link
+npm install<p>
+npm start<p>
+
+Go to http://localhost:3000 in your browser<p>
+Configure access to the IdentityMind server via the configuration link<p>
 Access Identity Link Graphs
