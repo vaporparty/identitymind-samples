@@ -147,15 +147,15 @@
 
 
         gg.startForceAtlas2();
-        /*
+
         var maxLayoutTimeMS = 300;
         if (graph.metrics.entities > 100)
           maxLayoutTimeMS = 1000;
         if (graph.metrics.entities > 1000)
           maxLayoutTimeMS = 5000;
-          */
+
         // don't burn up the browsers CPU forever
-        setTimeout(function () { gg.stopForceAtlas2(); }, 1000);
+        setTimeout(function () { gg.stopForceAtlas2(); }, maxLayoutTimeMS);
 
         // initialize drag & drop plugin
         sigma.plugins.dragNodes(gg, gg.renderers[0]);

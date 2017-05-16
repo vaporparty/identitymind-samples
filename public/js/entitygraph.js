@@ -7,6 +7,16 @@
  */
 
 
+var paymentImage = new Image();
+paymentImage.src = "images/payment.png";
+var userImage = new Image();
+userImage.src = "images/user.png";
+var computerImage = new Image();
+computerImage.src = "images/computer.png";
+var addressImage = new Image();
+addressImage.src = "images/address.png";
+
+
 function setEdgeStroke(context, edge) {
   context.lineWidth = edge.size;
   if (edge.visible === undefined || edge.visible) {
@@ -339,6 +349,14 @@ function allUnhidden(nn, g) {
       context.stroke();
       context.closePath();
 
+      context.drawImage(
+          paymentImage,
+          node[prefix + 'x'] - (size/2),
+          node[prefix + 'y'] - (size/2),
+          size,
+          size
+      );
+
       // is it selected?
       if (node.selectedNode) {
           context.lineWidth = highlightStrokeWidth;
@@ -367,6 +385,14 @@ function allUnhidden(nn, g) {
       context.fill();
       context.stroke();
       context.closePath();
+
+      context.drawImage(
+          userImage,
+          node[prefix + 'x'] - (size/2),
+          node[prefix + 'y'] - (size/2),
+          size,
+          size
+      );
 
 
       // is it selected?
@@ -397,6 +423,15 @@ function allUnhidden(nn, g) {
       Ycenter = node[prefix + 'y'];
       numberOfSides = 3;
       drawShape(context, size, numberOfSides, Xcenter, Ycenter, true);
+
+      context.drawImage(
+          computerImage,
+          node[prefix + 'x'] - (size/4),
+          node[prefix + 'y'] - (size/4),
+          size/2,
+          size/2
+      );
+
       // is it selected?
       if (node.selectedNode) {
           context.lineWidth = highlightStrokeWidth;
@@ -420,6 +455,15 @@ function allUnhidden(nn, g) {
       Ycenter = node[prefix + 'y'];
       numberOfSides = 6;
       drawShape(context, size, numberOfSides, Xcenter, Ycenter, true);
+
+      context.drawImage(
+          addressImage,
+          node[prefix + 'x'] - (size/2),
+          node[prefix + 'y'] - (size/2),
+          size,
+          size
+      );
+
 
       // is it selected?
       if (node.selectedNode) {
