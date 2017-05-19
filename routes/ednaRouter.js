@@ -34,6 +34,7 @@ router.route('/config').get(function(req, res) {
                 '<html><body>' +
                '<title>Configuration</title>\n' +
                '<a href="/">back</a><p>' +
+               '<p><p>Note that configuration change is for the entire server, not just the current user<p><p>' +
                '<div class="container">' +
                '<form action="/im/config" method="post" id="myform">\n' +
                    '<label>host:</label><input type="text" name="host" id="host" size="40" value="'+ednaConfig.host+'" /><br>\n' +
