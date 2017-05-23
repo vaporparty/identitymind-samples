@@ -74,10 +74,14 @@ router.get('/*', function(req, res) {
             res.write(ednaResponseBody);
             res.end();
         } else {
-            console.log(ednaResponse.statusCode);
             console.log(error);
-            console.log(ednaResponse.body);
-            res.json({message: "Failed to access eDNA: " + ednaResponse.statusCode + " - " + ednaResponse.body});
+            if (ednaResponse !== undefined) {
+                console.log(ednaResponse.statusCode);
+                console.log(ednaResponse.body);
+                res.json({message: "Failed to access eDNA: " + ednaResponse.statusCode + " - " + ednaResponse.body + " - " + error});
+            } else {
+                res.json({message: "Failed to access eDNA: " + error})
+            }
         }
     }).auth(ednaConfig.apiName, ednaConfig.apiKey, false);
 
