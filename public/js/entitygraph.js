@@ -67,7 +67,8 @@ function setNodeStroke(context, node, size) {
         context.strokeStyle = 'green';
     }
   } else {
-    context.fillStyle = '#eee';
+      context.strokeStyle = 'lightgrey';
+      context.fillStyle = '#eee';
   }
 }
 
