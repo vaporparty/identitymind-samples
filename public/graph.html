@@ -158,16 +158,16 @@
         if (graph.txn) {
           document.getElementById(metricsElementId).appendChild(document.createElement('pre')).innerHTML = JSON.stringify(graph.txn, null, 2);
 
-          if (graph.txn.paymentInstrumentId)
-            searchGraph("p:" + graph.txn.paymentInstrumentId, false)
-          if (graph.txn.deviceId)
-            searchGraph("d:" + graph.txn.deviceId, false)
-          if (graph.txn.userAccountInfoId)
-            searchGraph("u:" + graph.txn.userAccountInfoId, false)
-          if (graph.txn.billingAddressId)
-            searchGraph("a:" + graph.txn.billingAddressId, false)
-          if (graph.txn.shippingAddressId)
-            searchGraph("a:" + graph.txn.shippingAddressId, false)
+          if (graph.txn.pid)
+            searchGraph("p:" + graph.txn.pid, false);
+          if (graph.txn.did)
+            searchGraph("d:" + graph.txn.did, false);
+          if (graph.txn.bid)
+            searchGraph("u:" + graph.txn.bid, false);
+          if (graph.txn.blid)
+            searchGraph("a:" + graph.txn.blid, false);
+          if (graph.txn.aid)
+            searchGraph("a:" + graph.txn.aid, false)
         } else {
           searchGraph(id, false);
         }
