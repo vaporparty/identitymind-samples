@@ -1,4 +1,4 @@
-A wrapper around the IdentityMind Identity Link Grap APIs, using http://sigmajs.org for visualization<p>
+A node and client javascript wrapper around the IdentityMind Identity Link Graph APIs, using http://sigmajs.org for visualization<p>
 
 npm install<p>
 npm start<p>
