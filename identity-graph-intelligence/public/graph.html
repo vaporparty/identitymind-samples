@@ -15,8 +15,8 @@
         <form action="" name="myform2">
             max entities    : <input type="text" id="maxEntities" value="100"/><br>
             depth           : <input type="text" id="depth" value="5"/><br>
-            traverse tagged : <input type="text" id="traverse" value="false"/><br>
-            traverse dest   : <input type="text" id="destination" value="false"/><br>
+            traverse tagged : <input type="checkbox" id="traverse"/><br>
+            traverse dest   : <input type="checkbox" id="destination"/><br>
         </form>
     </span>
     <span id="form3" style="border: 1px dotted #107E92;display:table-cell;width: 400px;">
@@ -95,8 +95,8 @@
 
     var max = document.getElementById("maxEntities").value.trim();
     var depth = document.getElementById("depth").value.trim();
-    var traverse = document.getElementById("traverse").value.trim();
-    var destination = document.getElementById("destination").value.trim();
+    var traverse = document.getElementById("traverse").checked;
+    var destination = document.getElementById("destination").checked;
     var url = getBaseURL() + "entitygraph/v2/graph"
       + "?metrics=true"
       + "&transactionRecord=true"

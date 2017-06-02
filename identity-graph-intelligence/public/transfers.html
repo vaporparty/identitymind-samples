@@ -18,9 +18,9 @@
         <form action="" name="myform2">
             max entities    : <input type="text" id="maxEntities" value="100"/><br>
             depth           : <input type="text" id="depth" value="5"/><br>
-            traverse tagged : <input type="text" id="traverse" value="false"/><br>
-            include uai     : <input type="text" id="includeUAI" value="true"/><br>
-            include pi      : <input type="text" id="includePI" value="false"/><br>
+            traverse tagged : <input type="checkbox" id="traverse"/><br>
+            include uai     : <input type="checkbox" id="includeUAI" checked/><br>
+            include pi      : <input type="checkbox" id="includePI"/><br>
         </form>
     </span>
     <span id="form3" style="border: 1px dotted #107E92;display:table-cell;width: 400px;">
@@ -98,9 +98,9 @@
 
         var max = document.getElementById("maxEntities").value.trim();
         var depth = document.getElementById("depth").value.trim();
-        var traverse = document.getElementById("traverse").value.trim();
-        var includeUAI = document.getElementById("includeUAI").value.trim();
-        var includePI = document.getElementById("includePI").value.trim();
+        var traverse = document.getElementById("traverse").checked;
+        var includeUAI = document.getElementById("includeUAI").checked;
+        var includePI = document.getElementById("includePI").checked;
 
         var url = getBaseURL() + "entitygraph/v2/transfers/" + id
                   + "?maxEntities=" + max
