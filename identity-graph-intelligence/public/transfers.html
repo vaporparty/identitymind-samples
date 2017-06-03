@@ -123,6 +123,15 @@
                                     container: document.getElementById(graphElementId), type: 'canvas'
                                 }
                             }, function (g, graph) {
+
+                    if ((graph.nodes === undefined  ||graph.nodes.length === 0) && graph.metrics === undefined) {
+                          var msg = "";
+                          if (graph.message !== undefined) {
+                              msg = graph.message;
+                          }
+                          alert("Did not find entity: " + msg);
+                        }
+
                     gg = g;
                     document.getElementById(metricsElementId).innerHTML = "";
 
