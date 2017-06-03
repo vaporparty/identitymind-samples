@@ -26,13 +26,13 @@ a {
 }
 #graphColumn {
     display:table-cell;
-    height: 85vh;
+    height: 83vh;
     vertical-align: top;
 }
 #graphContainer {
     display:block;
     border: 1px dotted #107E92;
-    height: 85vh;
+    height: 83vh;
     vertical-align: top;
 }
 #metricsColumn {
