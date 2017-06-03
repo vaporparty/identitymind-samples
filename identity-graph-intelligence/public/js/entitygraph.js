@@ -16,6 +16,11 @@ computerImage.src = "images/computer.png";
 var addressImage = new Image();
 addressImage.src = "images/address.png";
 
+var globalAdminLoggedIn = false;   // whether to enable global admin features.  The API will authenticate before performing any actions!
+var selectedHighlightColor = 'lightgrey';
+var selectedHighlightStrokeWidth = 4;
+var gg;          // once the (sigma) graph is loaded this will be a reference to it
+
 
 function setEdgeStroke(context, edge) {
   context.lineWidth = edge.size;
@@ -148,7 +153,7 @@ function tagelement(action, imid) {
     xhr.open('POST', url, true);
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
-            if (xhr.status != 200) {
+            if (xhr.status !== 200) {
                 console.log(xhr, xhr.status, xhr.statusText, xhr.response);
                 alert("tagging: " + xhr.statusText + ": " + xhr.response);
                 return;
@@ -168,7 +173,7 @@ function searchGraph(term, zoom) {
     var foundCount = 0;
     var foundNode;
     gg.graph.nodes().forEach(function(n) {
-        if(n.id==term || n.typeString==term || (n.label && n.label.indexOf(term) > -1) || (n.tags && n.tags.indexOf(term) > -1)) {
+        if(n.id===term || n.typeString===term || (n.label && n.label.indexOf(term) > -1) || (n.tags && n.tags.indexOf(term) > -1)) {
             n.originalSize = n.size;   // save so we can restore later
             n.selectedNode = true;
            // n.size = 5;
@@ -179,10 +184,10 @@ function searchGraph(term, zoom) {
     console.log("found", foundCount);
     if (foundCount > 0)
         gg.refresh();  // refresh redraws to update properties
-    else if (foundCount == 0)
+    else if (foundCount === 0)
         setTimeout(function() { alert("Did not find entity"); }, 1000);
 
-    if (foundCount == 1 && zoom) {
+    if (foundCount === 1 && zoom) {
         gg.cameras[0].goTo({x:foundNode['read_cam0:x'],y:foundNode['read_cam0:y'],ratio:0.725});
     }
 }
@@ -190,7 +195,6 @@ function searchGraph(term, zoom) {
 
 function resetGraph() {
     console.log("reset graph");
-    var foundCount = 0;
     gg.graph.nodes().forEach(function(n) {
         if (n.originalSize) {
             n.size = n.originalSize;
@@ -225,7 +229,7 @@ function loadEntity(imid, label, entityElementId) {
     xhr.open('GET', url, true);
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
-            if (xhr.status != 200) {
+            if (xhr.status !== 200) {
                 console.log(xhr, xhr.status, xhr.statusText, xhr.response);
                 alert("entity load: " + xhr.statusText + ": " + xhr.response);
                 return;
@@ -283,7 +287,7 @@ function loadEntityGraphJSON(url, config, callback) {
 
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
-            if (xhr.status != 200) {
+            if (xhr.status !== 200) {
                 console.log(xhr, xhr.status, xhr.statusText, xhr.response);
                 alert("graph load: " + xhr.statusText + ": " + xhr.response);
                 return;
@@ -301,6 +305,37 @@ function loadEntityGraphJSON(url, config, callback) {
         }
     };
     xhr.send();
+}
+
+// Set the visible flag on only entities logged in merchant has seen
+function showMyEntities() {
+    if (gg !== undefined)
+        showMine(gg);
+}
+
+// Set the visible flag on all entities
+function showAll() {
+    if (gg !== undefined)
+        allUnhidden(gg);
+}
+
+
+function showMine(g) {
+    var keepNodeIds = new Set();
+    g.graph.nodes().forEach(function(n) {
+        if (n.seenAtMerchant) {
+            n.visible = true;
+            keepNodeIds.add(n.id);
+        } else {
+            n.visible = false;
+        }
+    });
+
+    g.graph.edges().forEach(function(e) {
+        e.visible = keepNodeIds.has(e.source) && keepNodeIds.has(e.target);
+    });
+
+    g.refresh()
 }
 
 
@@ -322,7 +357,7 @@ function hideNonNeighbours(nn, g) {
   g.refresh()
 }
 
-function allUnhidden(nn, g) {
+function allUnhidden(g) {
   g.graph.nodes().forEach(function(n) {
     n.visible = true;
   });
@@ -360,8 +395,8 @@ function allUnhidden(nn, g) {
 
       // is it selected?
       if (node.selectedNode) {
-          context.lineWidth = highlightStrokeWidth;
-          context.strokeStyle = highlightColor;
+          context.lineWidth = selectedHighlightStrokeWidth;
+          context.strokeStyle = selectedHighlightColor;
           context.beginPath();
           context.arc(node[prefix + 'x'], node[prefix + 'y'], size * 3, 2* Math.PI, false);
           context.stroke();
@@ -399,8 +434,8 @@ function allUnhidden(nn, g) {
       // is it selected?
       if (node.selectedNode) {
           context.beginPath();
-          context.lineWidth = highlightStrokeWidth;
-          context.strokeStyle = highlightColor;
+          context.lineWidth = selectedHighlightStrokeWidth;
+          context.strokeStyle = selectedHighlightColor;
           size = size * 2;
           context.rect(
                   node[prefix + 'x'] - size,
@@ -435,8 +470,8 @@ function allUnhidden(nn, g) {
 
       // is it selected?
       if (node.selectedNode) {
-          context.lineWidth = highlightStrokeWidth;
-          context.strokeStyle = highlightColor;
+          context.lineWidth = selectedHighlightStrokeWidth;
+          context.strokeStyle = selectedHighlightColor;
           drawShape(context, size * 3, numberOfSides, Xcenter, Ycenter, false);
       }
   };
@@ -468,8 +503,8 @@ function allUnhidden(nn, g) {
 
       // is it selected?
       if (node.selectedNode) {
-          context.lineWidth = highlightStrokeWidth;
-          context.strokeStyle = highlightColor;
+          context.lineWidth = selectedHighlightStrokeWidth;
+          context.strokeStyle = selectedHighlightColor;
           drawShape(context, size * 3, numberOfSides, Xcenter, Ycenter, false);
       }
   };
@@ -499,7 +534,7 @@ sigma.canvas.edges.d =
       edgeColor = settings('edgeColor'),
       defaultNodeColor = settings('defaultNodeColor'),
       defaultEdgeColor = settings('defaultEdgeColor'),
-      cp = {},
+      cp,
       size = edge[prefix + 'size'] || 1,
       tSize = target[prefix + 'size'],
       sX = source[prefix + 'x'],

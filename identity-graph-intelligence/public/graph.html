@@ -10,6 +10,7 @@
             merchant id : <label for="mid"></label><input type="text" name="mid" id="mid"><br>
             <input type="button" value="Submit" id="submit" onclick="loadData()"/>
         </form>
+        <label onmouseover="showMyEntities()" onmouseout="showAll()">Show only my entities</label>
     </span>
     <span id="form2" style="border: 1px dotted #107E92;display:table-cell;width: 400px;">
         <form action="" name="myform2">
@@ -67,12 +68,6 @@
 
 
 <script>
-
-  // whether to enable global admin features.  The API will authenticate before performing any actions!
-  var globalAdminLoggedIn = false;
-  var gg;          // once the (sigma) graph is loaded this will be a reference to it
-  var highlightColor = 'lightgrey';
-  var highlightStrokeWidth = 4;
 
 
   function loadData() {
@@ -195,7 +190,7 @@
         });
 
         gg.bind('outNode', function(nn) {
-          allUnhidden(nn,gg);
+          allUnhidden(gg);
         });
 
         // https://github.com/Linkurious/linkurious.js/blob/develop/examples/plugin-tooltips.html

@@ -13,6 +13,7 @@
             uai imid : <label for="id"></label><input type="text" name="id" id="id"><br>
             <input type="button" value="Submit" id="submit" onclick="loadData()"/>
         </form>
+        <label onmouseover="showMyEntities()" onmouseout="showAll()">Show only my entities</label>
     </span>
     <span id="form3" style="border: 1px dotted #107E92;display:table-cell;width: 400px;">
         <form action="" name="myform2">
@@ -61,12 +62,6 @@
 
 
 <script>
-
-    // whether to enable global admin features.  The API will authenticate before performing any actions!
-    var globalAdminLoggedIn = false;
-    var gg;          // once the (sigma) graph is loaded this will be a reference to it
-    var highlightColor = 'lightgrey';
-    var highlightStrokeWidth = 4;
 
     function loadData() {
         loadIdentityGraph(document.getElementById("id").value.trim(),
