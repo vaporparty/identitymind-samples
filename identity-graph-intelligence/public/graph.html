@@ -31,6 +31,7 @@
 
 <div id="container">
     <div id="metricsColumn">
+        <label onclick="toggleMetrics()">x</label>
         <div id="metricsContainer" > </div>
     </div>
     <div id="graphColumn">
@@ -38,6 +39,7 @@
         <div id="graphContainer"> </div>
     </div>
     <div id="entityColumn">
+        <label onclick="toggleEntity()" style="text-align: right; display:block;">x</label>
         <span id="entityContainer" > </span>
     </div>
 
@@ -183,7 +185,7 @@
         }
 
         gg.startForceAtlas2();
-        var maxLayoutTimeMS = 300;
+        var maxLayoutTimeMS = 1000;
         if (graph.metrics.entities > 100)
           maxLayoutTimeMS = 1000;
         if (graph.metrics.entities > 1000)

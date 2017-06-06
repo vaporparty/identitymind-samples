@@ -603,6 +603,32 @@ sigma.canvas.edges.d =
 
 
 
+var metricsCollapsed = false;
+function toggleMetrics() {
+    if (!metricsCollapsed) {
+        document.getElementById("metricsColumn").setAttribute("style", "width:10px");
+        document.getElementById("metricsContainer").setAttribute("style", "width:10px");
+        metricsCollapsed = true;
+    } else {
+        document.getElementById("metricsColumn").setAttribute("style", "width:400px");
+        document.getElementById("metricsContainer").setAttribute("style", "width:400px");
+        metricsCollapsed = false;
+    }
+}
+
+var entityCollapsed = false;
+function toggleEntity() {
+    if (!entityCollapsed) {
+        document.getElementById("entityColumn").setAttribute("style", "width:10px");
+        document.getElementById("entityContainer").setAttribute("style", "width:10px");
+        entityCollapsed = true;
+    } else {
+        document.getElementById("entityColumn").setAttribute("style", "width:400px");
+        document.getElementById("entityContainer").setAttribute("style", "width:400px");
+        entityCollapsed = false;
+    }
+}
+
 
 
 

@@ -38,6 +38,7 @@ a {
 #metricsColumn {
     border: 1px dotted #107E92;
     display:table-cell;
+    height: 83vh;
     width: 400px;
     max-width: 400px;
     vertical-align: top;
@@ -47,13 +48,13 @@ a {
     display:block;
     width: 400px;
     max-width: 400px;
-    height: 85vh;
+    height: 83vh;
     overflow: scroll;
     vertical-align: top;
 }
 #entityColumn {
     display:table-cell;
-    height: 85vh;
+    height: 83vh;
     width: 400px;
     max-width: 400px;
     vertical-align: top;
@@ -62,7 +63,7 @@ a {
     border: 1px dotted #107E92;
     display:block;
     overflow: scroll;
-    height: 85vh;
+    height: 83vh;
     vertical-align: top;
 }
 
