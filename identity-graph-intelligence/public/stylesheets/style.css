@@ -36,7 +36,6 @@ a {
     vertical-align: top;
 }
 #metricsColumn {
-    border: 1px dotted #107E92;
     display:table-cell;
     height: 83vh;
     width: 400px;
