@@ -31,7 +31,6 @@ a {
 }
 #graphContainer {
     display:block;
-    border: 1px dotted #107E92;
     height: 83vh;
     vertical-align: top;
 }
@@ -43,8 +42,6 @@ a {
     vertical-align: top;
 }
 #metricsContainer {
-    border: 1px dotted #107E92;
-    display:block;
     width: 400px;
     max-width: 400px;
     height: 83vh;
@@ -59,7 +56,6 @@ a {
     vertical-align: top;
 }
 #entityContainer  {
-    border: 1px dotted #107E92;
     display:block;
     overflow: scroll;
     height: 83vh;
@@ -70,12 +66,12 @@ a {
     width: 100%;
     overflow:hidden;
     display:table;
+    border-bottom: 1px solid #ddd;
 }
 
 form {
     margin: 5px;
     padding: 1em 5px;
-    border: 1px dotted #107E92;
 }
 .taggingform {
     margin: 5px;
