@@ -100,7 +100,7 @@ function getNodeColor(trust, seenAtMerchant) {
         if (seenAtMerchant)
             return 'rgba(198, 9, 9, 1)';
         else
-            return 'rgba(198, 9, 9, 0.3)';
+            return 'rgba(198, 9, 9, 0.7)';
     }
     else if (trust === 'SUSPICIOUS') {
         if (seenAtMerchant)
