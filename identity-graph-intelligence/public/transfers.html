@@ -1,21 +1,29 @@
-<!--
-  ~ Copyright (c) 2017. IDM Global Inc.  All Rights Reserved.
-  -->
-
 <html>
 <head>
+    <link href="/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" />
     <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
 <div id="header">
-    <span id="form" style="border: 1px dotted #107E92;display:table-cell;width: 400px;">
-        <form action="" name="myform">
-            uai imid : <label for="id"></label><input type="text" name="id" id="id"><br>
-            <input type="button" value="Submit" id="submit" onclick="loadData()"/>
+
+    <span class="col-md-4" id="form">
+
+        <form class="form-horizontal" action="" name="myform">
+
+            <div class="form-group">
+            <label for="id" class="col-md-4 control-label">imid or txn id: </label>
+            <div class="col-md-8">
+              <input class="form-control input-sm" type="text" name="id" id="id">
+            </div>
+          </div>
+
+            <button class="btn btn-sm btn-default" type="button" id="submit" onclick="loadData()">Submit</button>
         </form>
     </span>
-    <span id="form2" style="border: 1px dotted #107E92;display:table-cell;width: 400px;">
-        <form action="" name="myform2">
+
+    <span class="col-md-4" id="form2">
+
+        <form class="form-horizontal" action="" name="myform2">
             max entities    : <input type="text" id="maxEntities" value="100"/><br>
             depth           : <input type="text" id="depth" value="5"/><br>
             traverse tagged : <input type="checkbox" id="traverse"/><br>
@@ -23,11 +31,18 @@
             include pi      : <input type="checkbox" id="includePI"/><br>
         </form>
     </span>
-    <span id="form3" style="border: 1px dotted #107E92;display:table-cell;width: 400px;">
-        <form action="" name="myform2">
-            search for   : <input type="text" id="search"/><br>
-            <input type="button" value="Search" id="searchButton" onclick='searchGraph(document.getElementById("search").value.trim(), true)'/>
-            <input type="button" value="Reset" id="resetButton" onclick='resetGraph()'/>
+
+    <span class="col-md-4" id="form3">
+        <form class="form-horizontal" action="" name="myform2">
+
+            <div class="form-group">
+              <label for="search" class="col-md-4 control-label">Search for:</label>
+              <div class="col-md-8">
+                <input class="form-control input-sm" type="text" name="search" id="search"/>
+              </div>
+            </div>
+            <input class="btn btn-sm btn-default" type="button" value="Search" id="searchButton" onclick='searchGraph(document.getElementById("search").value.trim(), true)'/>
+            <input class="btn btn-sm btn-default" type="button" value="Reset" id="resetButton" onclick='resetGraph()'/>
         </form>
     </span>
 </div>
@@ -72,7 +87,11 @@
 
 <script src="js/sigma.plugins.tooltips.js"></script>
 <script src="js/mustache-0.8.1.min.js"></script>
+
 <script src="js/entitygraph.js"></script>
+<script src="js/Chart.bundle.min.js"></script>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
 
 
 

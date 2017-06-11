@@ -1,33 +1,86 @@
-<!--
-  ~ Copyright (c) 2017. IDM Global Inc.  All Rights Reserved.
-  -->
-
 <html>
 <head>
+    <link href="/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" />
     <link href="/stylesheets/style.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
 <div id="header">
-    <span id="form" style="border: 1px dotted #107E92;display:table-cell;width: 400px;">
-        <form action="" name="myform">
-            uai imid : <label for="id"></label><input type="text" name="id" id="id"><br>
-            <input type="button" value="Submit" id="submit" onclick="loadData()"/>
+    <span class="col-md-6" id="form">
+        <form class="form-horizontal" action="" name="myform">
+
+            <div class="form-group">
+                <label for="id" class="col-md-4 control-label">uai imid: </label>
+                <div class="col-md-8">
+                  <input class="form-control input-sm" type="text" name="id" id="id">
+                </div>
+            </div>
+            <button class="btn btn-sm btn-default" type="button" id="submit" onclick="loadData()">Submit</button>
         </form>
     </span>
-    <span id="form3" style="border: 1px dotted #107E92;display:table-cell;width: 400px;">
-        <form action="" name="myform2">
-            search for   : <input type="text" id="search"/><br>
-            <input type="button" value="Search" id="searchButton" onclick='searchGraph(document.getElementById("search").value.trim(), true)'/>
-            <input type="button" value="Reset" id="resetButton" onclick='resetGraph()'/>
+
+    <span class="col-md-4" id="form3">
+        <form class="form-horizontal" action="" name="myform2">
+
+            <div class="form-group">
+              <label for="search" class="col-md-4 control-label">Search for:</label>
+              <div class="col-md-8">
+                <input class="form-control input-sm" type="text" name="search" id="search"/>
+              </div>
+            </div>
+            <input class="btn btn-sm btn-default" type="button" value="Search" id="searchButton" onclick='searchGraph(document.getElementById("search").value.trim(), true)'/>
+            <input class="btn btn-sm btn-default" type="button" value="Reset" id="resetButton" onclick='resetGraph()'/>
         </form>
     </span>
 </div>
 
 
 <div id="container">
-    <div id="metricsColumn">
+    <div id="metricsColumn" style="display: none;">
         <label onclick="toggleMetrics()">x</label>
-        <div id="metricsContainer" > </div>
+        <div id="metricsWidget" class="well">
+          <div class="row text-center">
+            <h4>Graph Metrics</h4>
+            <div class="col-md-12 pull-right">
+              <h4><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> <span id="graph_score_result"></span> / 100<br>
+              <small>Graph Score</small></h4>
+            </div>
+          </div>
+          <hr style="border-top: 1px solid #cccccc;">
+          <div class="row">
+          <canvas id="myChart" height="250"></canvas>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Total Entities</td>
+                <td id="total_entities"></td>
+              </tr>
+              <tr>
+                <td>Unknown</td>
+                <td id="unknown_entities"></td>
+              </tr>
+              <tr>
+                <td>Bad</td>
+                <td id="bad_entities"></td>
+              </tr>
+              <tr>
+                <td>Fraud</td>
+                <td id="fraud_entities"></td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <a class="btn btn-primary btn-sm" role="button" data-toggle="collapse" href="#metricsContainer" aria-expanded="false" aria-controls="metricsContainer">Show Code</a>
+
+        </div>
+        </br></br>
+        <div class="collapse" id="metricsContainer" > </div>
     </div>
     <div id="graphColumn">
         <label onmouseover="showMyEntities()" onmouseout="showAll()">Show only my entities</label>
@@ -37,6 +90,7 @@
         <label onclick="toggleEntity()" style="text-align: right; display:block;">x</label>
         <span id="entityContainer" > </span>
     </div>
+
 </div>
 <div id="linkContainer"> </div>
 
@@ -63,9 +117,11 @@
 
 <script src="js/sigma.plugins.tooltips.js"></script>
 <script src="js/mustache-0.8.1.min.js"></script>
+
 <script src="js/entitygraph.js"></script>
-
-
+<script src="js/Chart.bundle.min.js"></script>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
 
 <script>
 
@@ -73,6 +129,34 @@
         loadIdentityGraph(document.getElementById("id").value.trim(),
                   'graphContainer', 'metricsContainer', 'entityContainer');
     }
+
+    function loadBarChart(barChartData){
+
+    if(window.myBar != undefined)
+      window.myBar.destroy()
+
+    var ctx = document.getElementById("myChart").getContext("2d");
+    window.myBar = new Chart(ctx, {
+        type: 'bar',
+        data: barChartData,
+        options: {
+            tooltips: {
+                mode: 'index',
+                intersect: false
+            },
+            responsive: true,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        }
+    });
+    
+  }
 
     /**
      * Load the sigma.js entity graph into the elements
@@ -114,6 +198,17 @@
                         }
 
                     gg = g;
+
+                     // Set Graph Score Color and value
+                    $('#graph_score_result').text(graph.metrics.score.toFixed(1))
+                    //$('.rep-container').css('color',reps_colors[graph.txn.aur][1])
+
+
+                    $('#total_entities').text(graph.metrics.entities)
+                    $('#bad_entities').text((graph.metrics.entitiesByReputation.BAD === undefined ? 0 : graph.metrics.entitiesByReputation.BAD))
+                    $('#unknown_entities').text((graph.metrics.entitiesByReputation.UNKNOWN === undefined ? 0 : graph.metrics.entitiesByReputation.UNKNOWN))
+                    $('#fraud_entities').text(graph.metrics.entitiesWithFraudEvents)
+
                     document.getElementById(metricsElementId).innerHTML = "";
 
                     document.getElementById(metricsElementId).appendChild(document.createElement('pre')).innerHTML =
@@ -134,6 +229,7 @@
                     searchGraph(id, false);
 
                 if (graph.identity) {
+
                     document.getElementById(entityElementId).innerHTML = "";
                     document.getElementById(entityElementId).appendChild(document.createElement('pre')).innerHTML =
                                                 '<div class="metrics-table">' +
@@ -148,6 +244,57 @@
                                                 '<\div><br>';
                     document.getElementById(entityElementId).appendChild(document.createElement('pre')).innerHTML = JSON.stringify(graph.identity, null, 2);
                 }
+
+                var chart_labels = [];
+                var chart_reps = {
+                  "VERY_GOOD":"#1b9e60",
+                  "GOOD":"#147072",
+                  "UNKNOWN":"#F5F20D",
+                  "SUSPICIOUS":"#bf7326",
+                  "BAD":"#c23030"
+                };
+                var chart_datasets = [];
+
+                for ( o in graph.metrics.entitiesByReputationAndType){
+                  
+                  chart_labels.push(o);
+                }
+
+                for(rep in chart_reps){
+
+                  var data = new Array(chart_labels.length).fill(0)
+                  var count = 0
+         
+                  for(o in graph.metrics.entitiesByReputationAndType){
+
+                    for( p in graph.metrics.entitiesByReputationAndType[o]){
+
+
+                      if(rep == p)
+                        data[count]=graph.metrics.entitiesByReputationAndType[o][p];
+
+                    }
+                    count++;
+                }
+
+                  chart_datasets.push({
+                    label: rep,
+                    backgroundColor: chart_reps[rep],
+                    data: data
+                  })
+
+                }
+
+                var barChartData = {
+                  labels: chart_labels,
+                  datasets: chart_datasets
+                }
+
+                loadBarChart(barChartData);
+
+                // Show Metrics Colum
+                if(!$('#metricsColumn').is(":visible"))
+                  $('#metricsColumn').show()  
 
 
                 gg.startForceAtlas2();

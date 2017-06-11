@@ -1,0 +1,71 @@
+<html>
+	<head>
+		<link href="/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body>
+
+	<div class="container text-center">
+		<div class="col-md-6 col-md-offset-3">
+			<form id="batchUpload" style="margin-top: 40px;">
+			 
+			  <div class="form-group">
+			    <label for="exampleInputFile">File input</label>
+			    <input type="file" id="exampleInputFile">
+			  </div>
+			  
+			  <button type="submit" class="btn btn-default">Submit</button>
+			</form>
+			
+		</div>
+	</div>
+		<script src="js/jquery-3.2.1.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script>
+
+			$(document).ready(function () {
+
+				var req_data = "";
+				var fileInput = document.getElementById("exampleInputFile"),
+
+				    readFile = function () {
+				        var reader = new FileReader();
+				        reader.onload = function () {
+				            req_data = reader.result;
+				        };
+				        // start reading the file. When it is done, calls the onload event defined above.
+				        
+				        reader.readAsBinaryString(fileInput.files[0]);
+				    };
+
+				fileInput.addEventListener('change', readFile);
+
+				var loc = window.location;
+
+			    $( "#batchUpload" ).submit(function( event ) {
+			    	event.preventDefault();
+			        
+			        $.ajax({
+			            type: "POST",
+			            url: loc.protocol + '//' + loc.host + '/im/transaction/graphscore/batch',
+			            data: req_data,
+			            success: function (data) {
+			            	var resp = JSON.parse(data)
+			                console.log(resp)
+
+			                if(resp.status == 'Pending'){
+			                	alert("Transaction data uploaded")
+			                	window.location.href = "/"
+			                }else{
+			                	alert("Error uploading transaction data")
+			                }
+			            },
+			            error: function (data) {
+			            	alert("Error uploading transaction data")
+			                console.log(data)
+			            },
+			        });
+			    });
+			});
+		</script>
+	</body>
+</html>
