@@ -314,12 +314,15 @@
             '      <tr><th align="left">Transaction Type</th> <td>' + graph.txn.tt + '</td></tr>' +
             '    </table>' +
             '<\div><br>';
+        } else {
+            $('#reputation_result').text("-");
+            $('.rep-container').css('color',"lightgray");
         }
 
         var chart_labels = [];
         var chart_reps = {
           "VERY_GOOD":"#1b9e60",
-          "GOOD":"#147072",
+          "GOOD":"rgba(5, 221, 172, 1)",
           "UNKNOWN":"#F5F20D",
           "SUSPICIOUS":"#bf7326",
           "BAD":"#c23030"
@@ -417,6 +420,7 @@
           gg,
           gg.renderers[0],
           {
+              /*
             node: [{
               show: 'clickNode',
               hide: 'click',
@@ -448,6 +452,7 @@
               }
 
             }],
+            */
             edge: [{
               show: 'overEdge',
               hide: 'outEdge',
