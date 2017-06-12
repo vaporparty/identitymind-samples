@@ -1,0 +1,8 @@
+{
+  "name": "Identity Link API Sample",
+  "description": "A barebones Node.js app using Express 4 for showcasing Identity Link API capabilites.",
+  "repository": "https://github.com/identitymind/identitymind-samples/tree/master/identity-graph-intelligence",
+  "logo": "https://cdn.rawgit.com/heroku/node-js-getting-started/master/public/node.svg",
+  "keywords": ["node", "express", "heroku"],
+  "image": "heroku/nodejs"
+}

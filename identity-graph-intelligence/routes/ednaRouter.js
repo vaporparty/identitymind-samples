@@ -87,6 +87,41 @@ router.get('/*', function(req, res) {
 
 });
 
+//
+// everything else under /im goes...
+//
+router.post('/*', function(req, res) {
+
+    // build the edna URL
+    var ednaURL = ednaConfig.host + "/im" + req.url;
+
+    // and send
+    console.log("request: " + ednaURL);
+    console.log("AUTH: " + ednaConfig.apiName + ":" + ednaConfig.apiKey);
+    console.log(req.body);
+
+    request.post({
+      url:     ednaURL,
+      body:    Object.keys(req.body)[0]
+    }, function(error, ednaResponse, ednaResponseBody){
+        if (!error && ednaResponse.statusCode === 200) {
+            // console.log(ednaResponseBody);
+            res.write(ednaResponseBody);
+            res.end();
+        } else {
+            console.log(error);
+            if (ednaResponse !== undefined) {
+                console.log(ednaResponse.statusCode);
+                console.log(ednaResponse.body);
+                res.json({message: "Failed to access eDNA: " + ednaResponse.statusCode + " - " + ednaResponse.body + " - " + error});
+            } else {
+                res.json({message: "Failed to access eDNA: " + error})
+            }
+        }
+    }).auth(ednaConfig.apiName, ednaConfig.apiKey, false);
+
+});
+
 
 module.exports = router;
 

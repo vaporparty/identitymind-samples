@@ -608,10 +608,14 @@ function toggleMetrics() {
     if (!metricsCollapsed) {
         document.getElementById("metricsColumn").setAttribute("style", "width:10px");
         document.getElementById("metricsContainer").setAttribute("style", "width:10px");
+        document.getElementById("metricsWidget").setAttribute("style", "width:10px");
+        $('#metricsWidget').hide()
         metricsCollapsed = true;
     } else {
         document.getElementById("metricsColumn").setAttribute("style", "width:400px");
         document.getElementById("metricsContainer").setAttribute("style", "width:400px");
+        document.getElementById("metricsWidget").setAttribute("style", "width:400px");
+        $('#metricsWidget').show()
         metricsCollapsed = false;
     }
 }
