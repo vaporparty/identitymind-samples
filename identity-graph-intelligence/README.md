@@ -1,5 +1,5 @@
-# Identity Mind Graph Intelligence Sample
-A node and client javascript wrapper around the IdentityMind Identity Link Graph APIs, using [http://sigmajs.org](http://sigmajs.org) and [http://www.chartjs.org/](http://www.chartjs.org/) for visualization.
+# IdentityMind IdentityLink Graph Sample
+A node and client javascript wrapper around the IdentityMind IdentityLink Graph APIs, using [http://sigmajs.org](http://sigmajs.org) and [http://www.chartjs.org/](http://www.chartjs.org/) for visualization.
 
 ## Running Locally
 Make sure you have [Node.js](https://nodejs.org/en/) installed, then clone our repo and start the node app by running the following commands:
@@ -12,9 +12,9 @@ $ npm start
 ```
 Your app should now be running on [localhost:3000](http://localhost:3000).
 
-### Deploying to Heroku
+## Deploying to Heroku
 -----
-To deploy this app to Heroku and test it on a public environment, execute the following commands:
+Alternatively, to deploy this app to Heroku and test it on a public environment, execute the following commands:
 
 ```
 $ heroku create
@@ -32,18 +32,18 @@ $ heroku open
     * [Identity View](http://localhost:3000/identity.html)
 
 ## Transaction Data Upload
-To upload transaction information for the graph functions to work properly you'll have to:
+In order to view the IdentityLink graph you will need to upload transaction data.  The platform supports real time upload of transaction data, but to ease testing you can also upload a CSV file of transactions:
 
-* Go to the Data Upload view [Identity View](http://localhost:3000/upload.html)
+* Go to the Data Upload view [Upload](http://localhost:3000/upload.html)
 * Upload csv file with transaction information (for detailed explanation of arguments and csv file format please refer to: [http://documentation.identitymindglobal.com/api/#payment-transaction](http://documentation.identitymindglobal.com/api/#payment-transaction))
     
     Example csv file format:
     ```
     amt,bc,bco,bfn,bln,bz,bs,bsn,dft,dfp,pccn,pcct,tea,aph,ip,sc,sco,sfn,sln,sz,ss,ssn,tid
-    40,Palo Alto,US,James,Dinh,55555,CA,123 anystreet,AU,1872ABCD129E…,4513bfe30439b317d3a504ecac74858965a89ce7,411111XXXXXX1111,james@gmail.com,555555555,69.181.162.146,Palo Alto,US,James,Dinh,55555,CA,123 anystreet,89
+    40,Palo Alto,US,James,Doe,55555,CA,123 any st,AU,1872-ABCD-129E,4513bfe30439b317d3a504ecac74858965a89ce7,411111XXXXXX1111,j1234@mail.com,6505551234,10.1.2.3,Palo Alto,US,James,Doe,55555,CA,123 any st,89
     ```
 
 ## Documentation
-For more information about Identity Link API endpoints you can visit our following documentation pages:
+For more information about IdentityLink API endpoints you can visit our following documentation pages:
 * [https://sandbox.identitymind.com/api/](https://sandbox.identitymind.com/api/)
 * [http://documentation.identitymindglobal.com/api/](http://documentation.identitymindglobal.com/api/)
