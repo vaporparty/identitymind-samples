@@ -1,5 +1,5 @@
 # Identity Mind Graph Intelligence Sample
-A django and javascript wrapper around the IdentityMind Identity Link Graph APIs, using [http://sigmajs.org](http://sigmajs.org) and [http://www.chartjs.org/](http://www.chartjs.org/) for visualization with heroku support for quick deploy and test.
+A django and javascript wrapper around the IdentityMind Identity Link Graph APIs, using [http://sigmajs.org](http://sigmajs.org) and [http://www.chartjs.org/](http://www.chartjs.org/) for visualization with [Heroku](https://www.heroku.com/) support for quick deploy and test.
 
 ## Running Locally
 
