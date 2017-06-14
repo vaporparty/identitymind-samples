@@ -1,0 +1,6 @@
+{
+  "name": "Identity Link API Sample",
+  "description": "A Django application for showcasing Identity Link API capabilites.",
+  "repository": "https://github.com/identitymind/identitymind-samples/tree/master/identity_graph_django_sample",
+  "keywords": ["django", "python", "heroku"]
+}

@@ -1,0 +1,417 @@
+{% load static %}
+<html>
+<head>
+    <link href="{% static "stylesheets/bootstrap.min.css" %}" type="text/css" rel="stylesheet" />
+    <link href="{% static "stylesheets/style.css" %}" type="text/css" rel="stylesheet" />
+</head>
+<body>
+<div id="header">
+    <span class="col-md-6" id="form">
+        <form class="form-horizontal" action="" name="myform">
+
+            <div class="form-group">
+                <label for="id" class="col-md-4 control-label">uai imid: </label>
+                <div class="col-md-8">
+                  <input class="form-control input-sm" type="text" name="id" id="id">
+                </div>
+            </div>
+            <button class="btn btn-sm btn-default" type="button" id="submit" onclick="loadData()">Submit</button>
+        </form>
+    </span>
+
+    <span class="col-md-4" id="form3">
+        <form class="form-horizontal" action="" name="myform2">
+
+            <div class="form-group">
+              <label for="search" class="col-md-4 control-label">Search for:</label>
+              <div class="col-md-8">
+                <input class="form-control input-sm" type="text" name="search" id="search"/>
+              </div>
+            </div>
+            <input class="btn btn-sm btn-default" type="button" value="Search" id="searchButton" onclick='searchGraph(document.getElementById("search").value.trim(), true)'/>
+            <input class="btn btn-sm btn-default" type="button" value="Reset" id="resetButton" onclick='resetGraph()'/>
+        </form>
+    </span>
+</div>
+
+
+<div id="container">
+    <div id="metricsColumn" style="display: none;">
+        <label onclick="toggleMetrics()">x</label>
+        <div id="metricsWidget" class="well">
+          <div class="row text-center">
+            <h4>Graph Metrics</h4>
+            <div class="col-md-12 pull-right">
+              <h4><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> <span id="graph_score_result"></span> / 100<br>
+              <small>Graph Score</small></h4>
+            </div>
+          </div>
+          <hr style="border-top: 1px solid #cccccc;">
+          <div class="row">
+          <canvas id="myChart" height="250"></canvas>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Total Entities</td>
+                <td id="total_entities"></td>
+              </tr>
+              <tr>
+                <td>Unknown</td>
+                <td id="unknown_entities"></td>
+              </tr>
+              <tr>
+                <td>Bad</td>
+                <td id="bad_entities"></td>
+              </tr>
+              <tr>
+                <td>Fraud</td>
+                <td id="fraud_entities"></td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <a class="btn btn-primary btn-sm" role="button" data-toggle="collapse" href="#metricsContainer" aria-expanded="false" aria-controls="metricsContainer">Show Code</a>
+
+        </div>
+        </br></br>
+        <div class="collapse" id="metricsContainer" > </div>
+    </div>
+    <div id="graphColumn">
+        <label onmouseover="showMyEntities()" onmouseout="showAll()">Show only my entities</label>
+        <div id="graphContainer"> </div>
+    </div>
+    <div id="entityColumn">
+        <label onclick="toggleEntity()" style="text-align: right; display:block;">x</label>
+        <span id="entityContainer" > </span>
+    </div>
+
+</div>
+<div id="linkContainer"> </div>
+
+<script src="{% static "js/sigmajs/sigma.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.exporters.svg.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.layout.forceAtlas2.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.layout.noverlap.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.neo4j.cypher.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.parsers.gexf.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.parsers.json.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.pathfinding.astar.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.plugins.animate.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.plugins.dragNodes.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.plugins.filter.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.plugins.neighborhoods.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.plugins.relativeSize.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.renderers.customEdgeShapes.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.renderers.customShapes.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.renderers.edgeDots.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.renderers.edgeLabels.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.renderers.parallelEdges.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.renderers.snapshot.min.js" %}"></script>
+<script src="{% static "js/sigmajs/plugins/sigma.statistics.HITS.min.js" %}"></script>
+
+<script src="{% static "js/sigma.plugins.tooltips.js" %}"></script>
+<script src="{% static "js/mustache-0.8.1.min.js" %}"></script>
+
+<script>
+    var paymentImage = new Image();
+    paymentImage.src = "{% static "images/payment.png" %}";
+    var userImage = new Image();
+    userImage.src = "{% static "images/user.png" %}";
+    var computerImage = new Image();
+    computerImage.src = "{% static "images/computer.png" %}";
+    var addressImage = new Image();
+    addressImage.src = "{% static "images/address.png" %}";
+</script>
+
+<script src="{% static "js/entitygraph.js" %}"></script>
+<script src="{% static "js/Chart.bundle.min.js" %}"></script>
+<script src="{% static "js/jquery-3.2.1.min.js" %}"></script>
+<script src="{% static "js/bootstrap.min.js" %}"></script>
+
+<script>
+
+    function loadData() {
+        loadIdentityGraph(document.getElementById("id").value.trim(),
+                  'graphContainer', 'metricsContainer', 'entityContainer');
+    }
+
+    function loadBarChart(barChartData){
+
+    if(window.myBar != undefined)
+      window.myBar.destroy()
+
+    var ctx = document.getElementById("myChart").getContext("2d");
+    window.myBar = new Chart(ctx, {
+        type: 'bar',
+        data: barChartData,
+        options: {
+            tooltips: {
+                mode: 'index',
+                intersect: false
+            },
+            responsive: true,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        }
+    });
+    
+  }
+
+    /**
+     * Load the sigma.js entity graph into the elements
+     * @param id
+     * @param graphElementId    target for the sigma graph
+     * @param metricsElementId  target for the graph metrics
+     */
+    function loadIdentityGraph(id, graphElementId, metricsElementId, entityElementId) {
+
+        document.getElementById(graphElementId).innerHTML = "";
+
+        console.log("Load user", id);
+
+
+        var url = getBaseURL() + "entitygraph/v2/identity/" + id + "?metrics=1&maxEntities=300";
+        loadEntityGraphJSON(url,
+                {
+                    container: graphElementId,
+                    settings: {
+                        defaultNodeColor: 'gray',
+                        defaultEdgeColor: '#E0E0E0',
+                        edgeColor: 'default',
+                        minNodeSize: 1,
+                        maxNodeSize: 20,
+                        labelThreshold: 16,
+                        enableEdgeHovering: true,
+                    },
+                    renderer: {
+                        container: document.getElementById(graphElementId), type: 'canvas'
+                    }
+                }, function (g, graph) {
+
+                    if ((graph.nodes === undefined  ||graph.nodes.length === 0) && graph.metrics === undefined) {
+                          var msg = "";
+                          if (graph.message !== undefined) {
+                              msg = graph.message;
+                          }
+                          alert("Did not find entity: " + msg);
+                        }
+
+                    gg = g;
+
+                     // Set Graph Score Color and value
+                    $('#graph_score_result').text(graph.metrics.score.toFixed(1))
+                    //$('.rep-container').css('color',reps_colors[graph.txn.aur][1])
+
+
+                    $('#total_entities').text(graph.metrics.entities)
+                    $('#bad_entities').text((graph.metrics.entitiesByReputation.BAD === undefined ? 0 : graph.metrics.entitiesByReputation.BAD))
+                    $('#unknown_entities').text((graph.metrics.entitiesByReputation.UNKNOWN === undefined ? 0 : graph.metrics.entitiesByReputation.UNKNOWN))
+                    $('#fraud_entities').text(graph.metrics.entitiesWithFraudEvents)
+
+                    document.getElementById(metricsElementId).innerHTML = "";
+
+                    document.getElementById(metricsElementId).appendChild(document.createElement('pre')).innerHTML =
+                        '<div class="metrics-table">' +
+                            '    <table>' +
+                           '      <tr><th align="left">Graph Root</th> <td>' + id + '</td></tr>' +
+                           '      <tr><th align="left">Graph Score</th> <td>' + graph.metrics.score + '</td></tr>' +
+                           '      <tr><th align="left">Total Entities</th> <td>' + graph.metrics.entities + '</td></tr>' +
+                           '      <tr><th align="left">Total Bad Entities</th> <td>' + (graph.metrics.entitiesByReputation.BAD === undefined ? 0 : graph.metrics.entitiesByReputation.BAD) + '</td></tr>' +
+                           '      <tr><th align="left">Total CB/Fraud Rfnd</th> <td>' + graph.metrics.chargeBackAndFraudRefundCount + '</td></tr>' +
+                           '      <tr><th align="left">Client Count</th> <td>' + graph.metrics.uniqueClientCount + '</td></tr>' +
+                           '      <tr><th align="left">Tags</th> <td>' + Object.keys(graph.metrics.entityTags) + '</td></tr>' +
+                           '    </table>' +
+                        '<\div><br>';
+
+                    document.getElementById(metricsElementId).appendChild(document.createElement('pre')).innerHTML = JSON.stringify(graph.metrics, null, 2);
+
+                    searchGraph(id, false);
+
+                if (graph.identity) {
+
+                    document.getElementById(entityElementId).innerHTML = "";
+                    document.getElementById(entityElementId).appendChild(document.createElement('pre')).innerHTML =
+                                                '<div class="metrics-table">' +
+                                                    '    <table>' +
+                                                   '      <tr><th align="left">Id</th> <td>' + graph.identity.id + '</td></tr>' +
+                                                   '      <tr><th align="left">TDI</th> <td>' + graph.identity.tdi + '</td></tr>' +
+                                                   '      <tr><th align="left">Rich</th> <td>' + graph.identity.richIdentity + '</td></tr>' +
+                                                   '      <tr><th align="left">Age (days)</th> <td>' + graph.identity.age + '</td></tr>' +
+                                                   '      <tr><th align="left">Recency (days)</th> <td>' + graph.identity.recency + '</td></tr>' +
+                                                   '      <tr><th align="left">Transaction Count</th> <td>' + graph.identity.frequency + '</td></tr>' +
+                                                   '    </table>' +
+                                                '<\div><br>';
+                    document.getElementById(entityElementId).appendChild(document.createElement('pre')).innerHTML = JSON.stringify(graph.identity, null, 2);
+                }
+
+                var chart_labels = [];
+                var chart_reps = {
+                  "VERY_GOOD":"#1b9e60",
+                  "GOOD":"#147072",
+                  "UNKNOWN":"#F5F20D",
+                  "SUSPICIOUS":"#bf7326",
+                  "BAD":"#c23030"
+                };
+                var chart_datasets = [];
+
+                for ( o in graph.metrics.entitiesByReputationAndType){
+                  
+                  chart_labels.push(o);
+                }
+
+                for(rep in chart_reps){
+
+                  var data = new Array(chart_labels.length).fill(0)
+                  var count = 0
+         
+                  for(o in graph.metrics.entitiesByReputationAndType){
+
+                    for( p in graph.metrics.entitiesByReputationAndType[o]){
+
+
+                      if(rep == p)
+                        data[count]=graph.metrics.entitiesByReputationAndType[o][p];
+
+                    }
+                    count++;
+                }
+
+                  chart_datasets.push({
+                    label: rep,
+                    backgroundColor: chart_reps[rep],
+                    data: data
+                  })
+
+                }
+
+                var barChartData = {
+                  labels: chart_labels,
+                  datasets: chart_datasets
+                }
+
+                loadBarChart(barChartData);
+
+                // Show Metrics Colum
+                if(!$('#metricsColumn').is(":visible"))
+                  $('#metricsColumn').show()  
+
+
+                gg.startForceAtlas2();
+                var maxLayoutTimeMS = 300;
+                if (graph.metrics.entities > 100)
+                    maxLayoutTimeMS = 1000;
+                if (graph.metrics.entities > 1000)
+                    maxLayoutTimeMS = 5000;
+                // don't burn up the browsers CPU forever
+                setTimeout(function () { gg.stopForceAtlas2(); }, maxLayoutTimeMS);
+                
+                    gg.bind('clickNode', function(e) {
+                        loadEntity(e.data.node.id, e.data.node.label, entityElementId)
+                        /*
+                        var c = gg.camera;
+                        console.log("zoom")
+                        c.goTo({ratio: c.ratio / c.settings('zoomingRatio')});
+                        */
+                    });
+                    // https://github.com/Linkurious/linkurious.js/blob/develop/examples/plugin-tooltips.html
+                    var tooltipInstance = sigma.plugins.tooltips(
+                            gg,
+                            gg.renderers[0],
+                            {
+                                node: [{
+                                    show: 'clickNode',
+                                    hide: 'click',
+                                    position: 'left',
+                                    template:
+                                    '<div class="arrow"></div>' +
+                                    ' <div class="sigma-tooltip-header">{{label}}</div>' +
+                                    '  <div class="sigma-tooltip-body">' +
+                                    '    <table>' +
+                                    '      <tr><th>Type</th> <td>{{typeString}}</td></tr>' +
+                                    '      <tr><th>Trust</th> <td>{{trust}}</td></tr>' +
+                                    '      <tr><th>Seen Count</th> <td>{{seenCount}}</td></tr>' +
+                                    '      <tr><th>Merchants</th> <td>{{merchantCount}}</td></tr>' +
+                                    '      <tr><th>Seen by me</th> <td>{{seenAtMerchant}}</td></tr>' +
+                                    '      <tr><th>First Seen</th> <td>{{firstSeen}}</td></tr>' +
+                                    '      <tr><th>Recent Seen</th> <td>{{mostRecentlySeen}}</td></tr>' +
+                                    '      <tr><th>Entity Tags</th> <td>{{tags}}</td></tr>' +
+                                    '    </table>' +
+                                    '  </div>' +
+                                    '  <div class="sigma-tooltip-footer">Number of connections: {{degree}}</div>',
+                                    renderer: function(node, template) {
+                                        // The function context is s.graph
+                                        node.degree = this.degree(node.id);
+                                        // Returns an HTML string:
+                                        return Mustache.render(template, node);
+                                        // Returns a DOM Element:
+                                        //var el = document.createElement('div');
+                                        //return el.innerHTML = Mustache.render(template, node);
+                                    }
+
+                                }],
+                                edge: [{
+                                    show: 'overEdge',
+                                    hide: 'outEdge',
+                                    delay: 300,
+                                    template:
+                                    '<div class="arrow"></div>' +
+                                    ' <div class="sigma-tooltip-header">{{relationships}}</div>' +
+                                    '  <div class="sigma-tooltip-body">' +
+                                    '    <table>' +
+                                    '      <tr><th>First Seen</th> <td>{{firstSeen}}</td></tr>' +
+                                    '      <tr><th>Recent Seen</th> <td>{{mostRecentlySeen}}</td></tr>' +
+                                    '    </table>' +
+                                    '  </div>',
+                                    renderer: function(edge, template) {
+                                        // The function context is s.graph
+                                        edge.degree = this.degree(edge.id);
+                                        // Returns an HTML string:
+                                        return Mustache.render(template, edge);
+                                        // Returns a DOM Element:
+                                        //var el = document.createElement('div');
+                                        //return el.innerHTML = Mustache.render(template, node);
+                                    }                                }]
+                            }
+                    );
+
+                    // initialize drag & drop plugin
+                    sigma.plugins.dragNodes(gg, gg.renderers[0]);
+                });
+
+        // if it looks like an imid, load the entity
+//        if (id.substring(1,2) == ':')
+//            loadEntity(id, '', 'entityContainer');
+
+        {
+            // link for JSON
+            //
+            document.getElementById('linkContainer').innerHTML = "";
+            var aLink = document.createElement('a');
+            document.getElementById('linkContainer').appendChild(aLink);
+            var linkText = document.createTextNode("Adjacency List Download");
+            aLink.appendChild(linkText);
+            aLink.title = "Adjacency List Download";
+            aLink.href = url;
+        }
+    }
+
+
+
+
+
+</script>
+</body>
+</html>

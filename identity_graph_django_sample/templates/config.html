@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Configuration</title>
+    <link href="{% static "stylesheets/bootstrap.min.css" %}" type="text/css" rel="stylesheet" />
+    <link href="{% static "stylesheets/style.css" %}" type="text/css" rel="stylesheet" />
+</header>
+</head>
+<body>
+    <div class="container">
+        <h1>Configuration</h1>
+        <a href="/"><- Back</a><br><br>
+        <p>Note that configuration change is session based.<p>
+        <form class="form-horizontal" action="{% url 'config' %}" method="post" id="myform">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="host" class="col-md-3 control-label">Host:</label>
+                <div class="col-md-7">
+                    <input class="form-control input-sm" type="text" name="host" id="host" size="40" value="{{ ednaConfig.host }}" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="apiName" class="col-md-3 control-label">API Name:</label>
+                <div class="col-md-7">
+                    <input class="form-control input-sm" type="text" name="apiName" id="apiName"  size="40" value="{{ ednaConfig.apiName }}"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="apiKey" class="col-md-3 control-label">API Key:</label>
+                <div class="col-md-7">
+                    <input class="form-control input-sm" type="password" name="apiKey" id="apiKey"  size="40" value="{{ ednaConfig.apiKey }}"/>
+                </div>
+            </div>
+
+            <input class="btn btn-default" type="submit"/>
+        </form>
+    </div>
+
+</body>
+</html>

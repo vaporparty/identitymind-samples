@@ -1,0 +1,104 @@
+{% load static %}
+<html>
+	<head>
+		<link href="{% static "stylesheets/bootstrap.min.css" %}" type="text/css" rel="stylesheet" />
+	</head>
+	<body>
+
+	<div class="container text-center">
+		<div class="col-md-6 col-md-offset-3">
+			<form id="batchUpload" style="margin-top: 40px;">
+			 
+			  <div class="form-group">
+			    <label for="exampleInputFile">File input</label>
+			    <input type="file" id="exampleInputFile">
+			  </div>
+			  
+			  <button type="submit" class="btn btn-default">Submit</button>
+			</form>
+			
+		</div>
+	</div>
+		<script src="{% static "js/jquery-3.2.1.min.js" %}"></script>
+        <script src="{% static "js/bootstrap.min.js" %}"></script>
+		<script>
+
+            // using jQuery to retrieve csrf cookie
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie != '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            var csrftoken = getCookie('csrftoken');
+
+            function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+
+            //setting the csrf token to ajax
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+
+			$(document).ready(function () {
+
+				var req_data = "";
+				var fileInput = document.getElementById("exampleInputFile"),
+
+				    readFile = function () {
+				        var reader = new FileReader();
+				        reader.onload = function () {
+				            req_data = reader.result;
+				        };
+				        // start reading the file. When it is done, calls the onload event defined above.
+				        
+				        reader.readAsBinaryString(fileInput.files[0]);
+				    };
+
+				fileInput.addEventListener('change', readFile);
+
+				var loc = window.location;
+
+			    $( "#batchUpload" ).submit(function( event ) {
+			    	event.preventDefault();
+			        
+			        $.ajax({
+			            type: "POST",
+			            url: loc.protocol + '//' + loc.host + '/im/transaction/graphscore/batch',
+			            data: req_data,
+			            success: function (data) {
+			                console.log(data)
+
+			                if(data.status == 'Pending'){
+			                	alert("Transaction data uploaded")
+			                	window.location.href = "/"
+			                }else{
+			                	alert("Error uploading transaction data")
+			                }
+			            },
+			            error: function (data) {
+			            	alert("Error uploading transaction data")
+			                console.log(data)
+			            }
+			        });
+			    });
+			});
+		</script>
+	</body>
+</html>
