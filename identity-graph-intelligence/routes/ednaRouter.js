@@ -8,7 +8,7 @@ var request = require('request').defaults({strictSSL: false});
 
 var ednaConfig = {};
 
-ednaConfig.host =  "https://edna.identitymind.com";
+ednaConfig.host =  "https://sandbox.identitymind.com";
 ednaConfig.apiName = "apiNameHere";
 ednaConfig.apiKey = "apiKeyHere";
 
@@ -78,7 +78,8 @@ router.get('/*', function(req, res) {
             if (ednaResponse !== undefined) {
                 console.log(ednaResponse.statusCode);
                 console.log(ednaResponse.body);
-                res.json({message: "Failed to access eDNA: " + ednaResponse.statusCode + " - " + ednaResponse.body + " - " + error});
+                res.statusCode = ednaResponse.statusCode;
+                res.json({message: "Failed to access eDNA: " + ednaResponse.statusCode + " - " + ednaResponse.body + (error == undefined ? "" : (" - " + error))});
             } else {
                 res.json({message: "Failed to access eDNA: " + error})
             }
@@ -88,7 +89,7 @@ router.get('/*', function(req, res) {
 });
 
 //
-// everything else under /im goes...
+// everything else  goes...
 //
 router.post('/*', function(req, res) {
 
@@ -113,7 +114,8 @@ router.post('/*', function(req, res) {
             if (ednaResponse !== undefined) {
                 console.log(ednaResponse.statusCode);
                 console.log(ednaResponse.body);
-                res.json({message: "Failed to access eDNA: " + ednaResponse.statusCode + " - " + ednaResponse.body + " - " + error});
+                res.statusCode = ednaResponse.statusCode;
+                res.json({message: "Failed to access eDNA: " + ednaResponse.statusCode + " - " + ednaResponse.body + (error == undefined ? "" : (" - " + error))});
             } else {
                 res.json({message: "Failed to access eDNA: " + error})
             }
