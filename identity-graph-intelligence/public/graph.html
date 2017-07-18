@@ -462,14 +462,16 @@
               ' <div class="sigma-tooltip-header">{{relationships}}</div>' +
               '  <div class="sigma-tooltip-body">' +
               '    <table>' +
-              '      <tr><th>First Seen</th> <td>{{firstSeen}}</td></tr>' +
-              '      <tr><th>Recent Seen</th> <td>{{mostRecentlySeen}}</td></tr>' +
+              '      <tr><th>First Seen</th> <td>{{firstSeenStr}}</td></tr>' +
+              '      <tr><th>Recent Seen</th> <td>{{mostRecentlySeenStr}}</td></tr>' +
               '    </table>' +
               '  </div>',
               renderer: function(edge, template) {
-                // The function context is s.graph
-                edge.degree = this.degree(edge.id);
-                // Returns an HTML string:
+                  // The function context is s.graph
+                  edge.degree = this.degree(edge.id);
+                  // Returns an HTML string:
+                  edge.firstSeenStr = new Date(edge.firstSeen).toISOString();
+                  edge.mostRecentlySeenStr = new Date(edge.mostRecentlySeen).toISOString();
                 return Mustache.render(template, edge);
                 // Returns a DOM Element:
                 //var el = document.createElement('div');
