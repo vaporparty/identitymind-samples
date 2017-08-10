@@ -38,12 +38,12 @@ Or you can use [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) to
 Your app should now be running on [http://localhost:5000](http://localhost:5000).
 
 ## Deploying to Heroku
-To deploy this app to Heroku and test it on a public environment, execute the following commands:
+To deploy this app (named idl-demo) to Heroku and test it on a public environment, execute the following commands:
 
 ```
-$ heroku create
+$ heroku create idl-demo --buildpack heroku/python
 $ heroku git:remote -a idl-demo # For existing repo we need to add the heroku remote
-$ git push heroku master
+$ git subtree push --prefix identity_graph_django_sample heroku master # Make sure you are on the top level directory of the repo
 $ heroku open
 ```
 

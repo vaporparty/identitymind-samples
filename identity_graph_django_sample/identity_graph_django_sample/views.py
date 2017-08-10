@@ -26,30 +26,30 @@ def config(request):
 
 @require_GET
 def api_router(request):
-    ednaConfig = get_ednaConfig(request)
+    edna_config = get_ednaConfig(request)
 
-    ednaUrl = ednaConfig['host'] + request.get_full_path()
+    edna_url = edna_config['host'] + request.get_full_path()
 
-    print "Request: " + ednaUrl
+    print("Request: " + edna_url)
 
-    response = requests.request("GET", ednaUrl, auth=(ednaConfig['apiName'], ednaConfig['apiKey']), verify=False)
+    response = requests.request("GET", edna_url, auth=(edna_config['apiName'], edna_config['apiKey']), verify=False)
 
-    print "Response: " + response.text
+    print("Response: " + response.text)
 
     return JsonResponse(response.json(), safe=False)
 
 
 @require_POST
 def transaction_upload(request):
-    ednaConfig = get_ednaConfig(request)
+    edna_config = get_ednaConfig(request)
 
-    ednaUrl = ednaConfig['host'] + request.get_full_path()
+    edna_url = edna_config['host'] + request.get_full_path()
 
-    print "Request: " + ednaUrl
-    response = requests.request("POST", ednaUrl, data=request.body,
-                                auth=(ednaConfig['apiName'], ednaConfig['apiKey']), verify=False)
+    print("Request: " + edna_url)
+    response = requests.request("POST", edna_url, data=request.body,
+                                auth=(edna_config['apiName'], edna_config['apiKey']), verify=False)
 
-    print "Response: " + response.text
+    print("Response: " + response.text)
 
     return JsonResponse(response.json(), safe=False)
 
