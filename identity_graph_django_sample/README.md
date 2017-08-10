@@ -42,6 +42,7 @@ To deploy this app to Heroku and test it on a public environment, execute the fo
 
 ```
 $ heroku create
+$ heroku git:remote -a idl-demo # For existing repo we need to add the heroku remote
 $ git push heroku master
 $ heroku open
 ```
