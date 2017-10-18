@@ -1,6 +1,8 @@
 # Identitymind KYC plugin - Node Example
 A Node.js example for showing a full data flow/communication of the Identitymind KYC plugin by mocking a ICO website.
 
+**NOTE: To prevent clickjacking attacks you must set X-Frame-Options header to SAMEORIGIN or DENY where the plugin will load.**
+
 ## Running Locally
 
 #### Cloning repo

@@ -1,6 +1,8 @@
 # Identitymind KYC plugin - Django Example
 A Django example for showing a full data flow/communication of the Identitymind KYC plugin by mocking a ICO website, with [Heroku](https://www.heroku.com/) support for quick deploy and test.
 
+**NOTE: To prevent clickjacking attacks you must set X-Frame-Options header to SAMEORIGIN or DENY where the plugin will load.**
+
 ## Running Locally
 
 #### Cloning repo
