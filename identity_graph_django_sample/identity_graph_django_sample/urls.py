@@ -22,6 +22,7 @@ import identity_graph_django_sample.views
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='index.html'), name='home'),
     url(r'^graph/$', TemplateView.as_view(template_name='graph.html'), name='graph'),
+    url(r'^test/$', identity_graph_django_sample.views.test, name='test'),
     url(r'^transfers/$', TemplateView.as_view(template_name='transfers.html'), name='transfers'),
     url(r'^identity/$', TemplateView.as_view(template_name='identity.html'), name='identity'),
     url(r'^im/config/$', identity_graph_django_sample.views.config, name='config'),

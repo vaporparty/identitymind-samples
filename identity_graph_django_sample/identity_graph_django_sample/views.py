@@ -1,7 +1,7 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 import requests
-import json
+import re
 
 from django.views.decorators.http import require_GET, require_POST
 
@@ -60,3 +60,10 @@ def get_ednaConfig(request):
         'apiName': 'apiNameHere',
         'apiKey': 'apiKeyHere'
     })
+
+
+def test(request):
+    regex = re.compile('^HTTP_')
+    print(dict((regex.sub('', header), value) for (header, value)
+               in request.META.items() if header.startswith('HTTP_')))
+    return JsonResponse({'foo': 'bar'})

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Amazing Cryptocurrency ICO</title>
+    </head>
+    <title>Amazing Cryptocurrency ICO</title>
+    <body>
+        <script>
+            var _idm = {
+                container_id: "idm-container",
+                plugin_token: "<%= token %>",
+                on_response: function(jwtresponse){
+                    const array = jwtresponse.split('.');
+                    const header = JSON.parse(atob(array[0]));
+                    const response = JSON.parse(atob(array[1]));
+                    const signature = array[2];
+                    const xhr = new XMLHttpRequest();
+                    const url = "/kycresponse";
+                    xhr.open("POST", url, true);
+                    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState == 4 && xhr.status == 200) {
+                            // response validated
+                            alert("Response from Identitymind is valid.  Result: " + response.kyc_result);
+                       }
+                    };
+                    xhr.send(jwtresponse);
+                }
+
+            };
+            (function() {
+                function ls() {
+                    var e=document.createElement('script');
+                    e.src='https://d1rs4puinhb994.cloudfront.net/idm.min.js';
+                    document.body.appendChild(e)
+                }
+                if(window.attachEvent){
+                    window.attachEvent('onload',ls)
+                }else{
+                    window.addEventListener('load',ls,!1)
+                }
+            })()
+        </script>
+        <h1>Amazing Cryptocurrency ICO</h1>
+        <p>
+            Amazing Cryptocurrency is just amazing. Be part of the future.
+        </p>
+        <div id="idm-container" style="width: 500px;"></div>
+    </body>
+</html>
+

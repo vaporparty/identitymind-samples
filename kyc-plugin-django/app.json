@@ -1,0 +1,11 @@
+{
+  "name": "Identitymind KYC Plugin Demo",
+  "description": "A Django application that mocks a website using Identitymind KYC plugin.",
+  "repository": "https://github.com/identitymind/identitymind-samples/tree/master/kyc-plugin-django",
+  "keywords": ["django", "python", "heroku"],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ]
+}
