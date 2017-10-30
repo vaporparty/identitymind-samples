@@ -8,6 +8,9 @@
         <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
         <link href="{% static 'css/narrow-jumbotron.css' %}" rel="stylesheet">
         <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet" />
+        <style>
+            #next{margin-top:15px;}
+        </style>
     </head>
     <body>
     <script>
@@ -18,6 +21,8 @@
             required_address_country_list: ['US','BR','MQ'],
             required_id_country_list:['US::^(?!666|000|9\\d{2})\\d{3}[- ]{0,1}(?!00)\\d{2}[- ]{0,1}(?!0{4})\\d{4}$','CA::'],
             country_blacklist: ['AR','PR'],
+            min_age:18,
+            styles:{"next":"margin-top:10px"},
             on_response: function(jwtresponse){
 
                 $.post( "/kyc/", jwtresponse)
@@ -30,7 +35,7 @@
             }
         };
 
-        (function(){function ls(){var e=document.createElement('script');e.src='https://d1rs4puinhb994.cloudfront.net/idm.min.js';document.body.appendChild(e)}
+        (function(){function ls(){var e=document.createElement('script');e.src='https://cd1st.identitymind.com/idm.min.js';document.body.appendChild(e)}
         if(window.attachEvent){window.attachEvent('onload',ls)}else{window.addEventListener('load',ls,!1)}})()
 
     </script>

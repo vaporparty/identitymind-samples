@@ -27,7 +27,7 @@ SECRET_KEY = '-$t%gc&$7gr-(ol8iur@+jpm@to9t1fm)&gkl%jy!d553cmce^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOST')]
+ALLOWED_HOSTS = ['*']
 
 # Custom Settings
 
